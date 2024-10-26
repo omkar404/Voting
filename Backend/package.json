@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server",
-    "build": "server"
+    "build": "server.js"
   },
   "type": "module",
   "author": "",
