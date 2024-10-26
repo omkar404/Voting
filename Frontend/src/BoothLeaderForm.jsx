@@ -38,7 +38,7 @@ const BoothLeaderForm = () => {
     useEffect(() => {
         const fetchVillages = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/villages');
+                const response = await axios.get('https://voting-backend-qbcz.onrender.com/villages');
                 setVillages(response.data.villages);
                 setSubmittedData(response.data); // Store fetched data
             } catch (error) {
@@ -52,7 +52,7 @@ const BoothLeaderForm = () => {
     useEffect(() => {
         const fetchVillages = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/villages');
+                const response = await axios.get('https://voting-backend-qbcz.onrender.com/villages');
                 console.log(response.data); // Log the data for debugging
                 setVillages(response.data.villages); // Set the villages array
             } catch (error) {
@@ -138,141 +138,6 @@ const BoothLeaderForm = () => {
     const handleCloseSnackbar = () => {
         setSnackbarOpen(false);
     };
-
-    // return (
-    //     <Container maxWidth="lg" sx={{ mt: 5 }}>
-    //         <h1>Booth Leader Form</h1>
-    //         <Box sx={{ mt: 3, display: 'flex', justifyContent: 'space-between' }}>
-    //             <Button
-    //                 variant="outlined"
-    //                 component={Link}
-    //                 to="/"
-    //                 sx={{ mb: 2 }}
-    //             >
-    //                 Back to Home
-    //             </Button>
-    //         </Box>
-    //         <Box>
-    //             <p><strong>Selected Village:</strong> {localVillageName || 'N/A'}</p>
-    //             <p><strong>Selected Leader:</strong> {localLeaderName || 'N/A'}</p>
-    //             <p><strong>Selected Tab:</strong> {localTabName || 'N/A'}</p>
-    //         </Box>
-    //         <Grid container spacing={5}>
-    //             {boothLeaders.map((leader, index) => (
-    //                 <Grid item xs={12} sm={6} md={4} key={index}>
-    //                     <TextField
-    //                         label="Booth Leader Name"
-    //                         value={leader.name}
-    //                         onChange={(e) => updateBoothLeader(index, 'name', e.target.value)}
-    //                         variant="outlined"
-    //                         fullWidth
-    //                         error={!!errorFields[`leaderName${index}`]}
-    //                         helperText={errorFields[`leaderName${index}`] ? 'Required' : ''}
-    //                     />
-    //                     <TextField
-    //                         label="Contact Number"
-    //                         value={leader.MobNo}
-    //                         onChange={(e) => updateBoothLeader(index, 'MobNo', e.target.value)}
-    //                         variant="outlined"
-    //                         fullWidth
-    //                         sx={{ mt: 1 }}
-    //                     />
-    //                     <TextField
-    //                         label="Comments"
-    //                         value={leader.Comments}
-    //                         onChange={(e) => updateBoothLeader(index, 'Comments', e.target.value)}
-    //                         variant="outlined"
-    //                         fullWidth
-    //                         sx={{ mt: 1 }}
-    //                     />
-    //                 </Grid>
-    //             ))}
-    //         </Grid>
-
-    //         <h3>Additional Questions</h3>
-    //         <Grid container spacing={2}>
-    //             {['No of difference parties available in village', 'No of Tarun mandal list, number?',
-    //                 'No of society?', 'No.Of dairys?',
-    //                 'Any community or leader . Example patil,shimpi,parit. Desai etc  they have some big community or group etc'].map((question, index) => (
-    //                     <Grid item xs={12} sm={6} md={6} key={index}>
-    //                         <TextField
-    //                             variant="outlined"
-    //                             label={question}
-    //                             value={answers[index]}
-    //                             onChange={(e) => handleAnswerChange(index, e.target.value)}
-    //                             fullWidth
-    //                             error={!!errorFields[`answer${index}`]}
-    //                             helperText={errorFields[`answer${index}`] ? 'Required' : ''}
-    //                         />
-    //                     </Grid>
-    //                 ))}
-    //         </Grid>
-
-    //         <Box sx={{ mt: 3, display: 'flex', justifyContent: 'space-between' }}>
-    //             <Button variant="contained" onClick={handleAddLeader}>
-    //                 Add Booth Leader and Village
-    //             </Button>
-    //             <Button
-    //                 variant="outlined"
-    //                 component={Link}
-    //                 to="/daily-update"
-    //                 sx={{ mb: 2 }}
-    //             >
-    //                 Daily Update
-    //             </Button>
-    //         </Box>
-
-
-
-    //         {/* Table Container */}
-    //         <TableContainer component={Paper}>
-    //             <Table>
-    //                 <TableHead>
-    //                     <TableRow>
-    //                         <TableCell><strong>JDP Name</strong></TableCell>
-    //                         <TableCell><strong>Village Name</strong></TableCell>
-    //                         <TableCell><strong>Total Votes</strong></TableCell>
-    //                         <TableCell><strong>Booth Leaders</strong></TableCell>
-    //                         <TableCell><strong>Questions</strong></TableCell>
-    //                     </TableRow>
-    //                 </TableHead>
-    //                 <TableBody>
-    //                     {submittedData.map((jdp) => (
-    //                         jdp.villages.map((village) => (
-    //                             <TableRow key={village._id}>
-    //                                 <TableCell>{jdp.name}</TableCell>
-    //                                 <TableCell>{village.villageName}</TableCell>
-    //                                 <TableCell>{village.totalVotes}</TableCell>
-    //                                 <TableCell>
-    //                                     {village.boothLeaders.map((leader) => (
-    //                                         <div key={leader._id}>
-    //                                             {leader.name} ({leader.MobNo})
-    //                                         </div>
-    //                                     ))}
-    //                                 </TableCell>
-    //                                 <TableCell>
-    //                                     {village.questions.map((q) => (
-    //                                         <div key={q._id}>
-    //                                             {q.question}: {q.answer}
-    //                                         </div>
-    //                                     ))}
-    //                                 </TableCell>
-    //                             </TableRow>
-    //                         ))
-    //                     ))}
-    //                 </TableBody>
-    //             </Table>
-    //         </TableContainer>
-
-    //         {/* Snackbar for messages */}
-    //         <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
-    //             <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
-    //                 {snackbarMessage}
-    //             </Alert>
-    //         </Snackbar>
-    //     </Container>
-    // );
-
     return (
         <Container maxWidth="lg" sx={{ mt: 5 }}>
             <Typography variant="h4" gutterBottom align="center">
