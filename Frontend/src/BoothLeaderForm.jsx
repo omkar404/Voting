@@ -38,7 +38,7 @@ const BoothLeaderForm = () => {
     useEffect(() => {
         const fetchVillages = async () => {
             try {
-                const response = await axios.get('https://voting-backend-qbcz.onrender.com/villages');
+                const response = await axios.get('https://voting-2q4b.onrender.com/villages');
                 setVillages(response.data.villages);
                 setSubmittedData(response.data); // Store fetched data
             } catch (error) {
@@ -52,7 +52,7 @@ const BoothLeaderForm = () => {
     useEffect(() => {
         const fetchVillages = async () => {
             try {
-                const response = await axios.get('https://voting-backend-qbcz.onrender.com/villages');
+                const response = await axios.get('https://voting-2q4b.onrender.com/villages');
                 console.log(response.data); // Log the data for debugging
                 setVillages(response.data.villages); // Set the villages array
             } catch (error) {
