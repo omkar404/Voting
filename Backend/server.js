@@ -51,11 +51,13 @@ const startServer = async () => {
     app.use('/daily-update', DailyUpdate);
     app.use('/', (req, res) => {
         res.json({ message: 'Hello, World!' });
-    });
+    e});
 
     app.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
     });
 };
-
+app.use('/', (req, res) => {
+        res.json({ message: 'Hello, World!' });
+    e});
 startServer();
