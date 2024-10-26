@@ -49,9 +49,9 @@ const startServer = async () => {
     await seedDatabase(); // Only seed if you want to initialize data
     app.use('/villages', villagesRouter);
     app.use('/daily-update', DailyUpdate);
-    app.use('/', (req, res) => {
-        res.json({ message: 'Hello, World!' });
-    e});
+    // app.use('/', (req, res) => {
+    //     res.json({ message: 'Hello, World!' });
+    // e});
 
     app.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
