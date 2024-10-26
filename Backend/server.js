@@ -57,4 +57,7 @@ const startServer = async () => {
         console.log(`Server is running on port ${PORT}`);
     });
 };
+    app.use('/', (req, res) => {
+        res.json({ message: 'Hello, World!' });
+    e});
 startServer();
