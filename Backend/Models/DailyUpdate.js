@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const boothLeaderSchema = new mongoose.Schema({
     name: { type: String, required: true },
@@ -18,4 +18,4 @@ const dailyUpdateSchema = new mongoose.Schema({
 
 const DailyUpdate = mongoose.model('DailyUpdate', dailyUpdateSchema);
 
-module.exports = DailyUpdate;
+export default DailyUpdate;

@@ -1,24 +1,27 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const Village = require('../Models/Village');
+import JDP from '../Models/Village.js'; 
+
 
 router.get('/', async (req, res) => {
     try {
-        const villages = await Village.find();
+        const villages = await JDP.find(); 
         res.json(villages);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
+    } catch (error) {
+        console.error('Error fetching villages:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
+
 // Add a new village
 router.post('/', async (req, res) => {
-    const village = new Village(req.body);
     try {
-        const newVillage = await village.save();
-        res.status(201).json(newVillage);
-    } catch (err) {
-        res.status(400).json({ message: err.message });
+        const newJDP = new JDP(req.body);
+        await newJDP.save();
+        res.status(201).json(newJDP);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
 });
 
@@ -26,7 +29,7 @@ router.post('/', async (req, res) => {
 // Get all booth leaders from all villages
 router.get('/booth-leaders', async (req, res) => {
     try {
-        const villages = await Village.find();
+        const villages = await JDP.find();
         const boothLeaders = villages.flatMap(village => 
             village.boothLeaders.map(leader => ({
                 name: leader.name,
@@ -41,6 +44,4 @@ router.get('/booth-leaders', async (req, res) => {
     }
 });
 
-
-
-module.exports = router;
+export default router; // Use export default instead of module.exports

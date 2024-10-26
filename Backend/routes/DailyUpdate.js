@@ -1,6 +1,6 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const DailyUpdate = require('../Models/DailyUpdate');
+import DailyUpdate from '../Models/DailyUpdate.js';
 
 router.get('/', async (req, res) => {
     try {
@@ -21,4 +21,4 @@ router.post('/', async (req, res) => {
         res.status(400).json({ message: 'Error saving daily update', error });
     }
 });
-module.exports = router;
+export default router;
