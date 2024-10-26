@@ -20,27 +20,28 @@ const PORT = process.env.PORT || 5000;
 
 
 
-    const connectDB = async () => {
-        try {
-            await mongoose.connect(process.env.MONGODB_URI),
-                console.log('MongoDB connected');
-            } catch (error) {
-                console.error('MongoDB connection error:', error);
-                process.exit(1); // Exit the process if connection fails
-            }
-        };
+const connectDB = async () => {
+    try {
+        await mongoose.connect(process.env.MONGODB_URI);
+        console.log('MongoDB connected');
+    } catch (error) {
+        console.error('MongoDB connection error:', error);
+        process.exit(1);
+    }
+};
 
-    const seedDatabase = async () => {
-        try {
-            // Clear existing JDPs if necessary
-            await JDP.deleteMany({});
-            // Insert the new JDP data
-            await JDP.insertMany(jdpData);
-            console.log('JDP data seeded successfully');
-        } catch (error) {
-            console.error('Error seeding database:', error);
-        }
-    };
+
+const seedDatabase = async () => {
+    try {
+        // Clear existing JDPs if necessary
+        await JDP.deleteMany({});
+        // Insert the new JDP data
+        await JDP.insertMany(jdpData);
+        console.log('JDP data seeded successfully');
+    } catch (error) {
+        console.error('Error seeding database:', error);
+    }
+};
 
 
 
@@ -51,13 +52,15 @@ const startServer = async () => {
     app.use('/daily-update', DailyUpdate);
     // app.use('/', (req, res) => {
     //     res.json({ message: 'Hello, World!' });
-    // e});
+    // });
 
     app.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
     });
 };
-    app.use('/', (req, res) => {
-        res.json({ message: 'Hello, World!' });
-    e});
+
+app.use('/', (req, res) => {
+    res.json({ message: 'Hello, World!' });
+});
+
 startServer();
