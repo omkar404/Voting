@@ -42,7 +42,7 @@ const BoothLeaderForm = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/villages');
+                const response = await axios.get('https://voting-backend-omvo.onrender.com/villages');
                 setData(response.data || []);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -103,7 +103,7 @@ const BoothLeaderForm = () => {
         };
 
         try {
-            await axios.post('http://localhost:5000/villages', newJDP);
+            await axios.post('https://voting-backend-omvo.onrender.com/villages', newJDP);
             resetForm();
             setLocalVillageName('');
             setLocalLeaderName('');
