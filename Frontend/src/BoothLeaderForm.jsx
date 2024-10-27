@@ -1,71 +1,80 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import {
-    TextField,
-    Button,
-    Box,
-    Container,
-    Snackbar,
     Alert,
+    Snackbar,
+    TextField,
     Grid,
+    Box,
+    Button,
+    Container,
     Table,
-    Typography,
     TableContainer,
     TableHead,
     TableBody,
     TableRow,
     TableCell,
     Paper,
+    Typography,
+    CircularProgress
 } from '@mui/material';
 import axios from 'axios';
 
 const BoothLeaderForm = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const [villages, setVillages] = useState([]);
+    
+    // State variables
+    const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [localVillageName, setLocalVillageName] = useState(location.state?.villageName || '');
     const [localLeaderName, setLocalLeaderName] = useState(location.state?.leaderName || '');
     const [localTabName, setLocalTabName] = useState(location.state?.tabName || '');
-    const [submittedData, setSubmittedData] = useState([]);
-
     const [boothLeaders, setBoothLeaders] = useState([{ name: '', MobNo: '', Comments: '' }]);
     const [answers, setAnswers] = useState(Array(5).fill(''));
-    const [errorFields, setErrorFields] = useState({});
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+    const [errorFields, setErrorFields] = useState({});
 
+    // Fetch data on mount
     useEffect(() => {
-        const fetchVillages = async () => {
+        const fetchData = async () => {
             try {
-                const response = await axios.get('https://voting-backend-e82m.onrender.com/villages');
-                setVillages(response.data.villages);
-                setSubmittedData(response.data); // Store fetched data
+                const response = await axios.get('http://localhost:5000/villages');
+                setData(response.data || []);
             } catch (error) {
-                console.error('Error fetching village data:', error);
-            }
-        };
-        fetchVillages();
-    }, []);
-
-    // Other functions remain unchanged...
-    useEffect(() => {
-        const fetchVillages = async () => {
-            try {
-                const response = await axios.get('https://voting-backend-e82m.onrender.com/villages');
-                console.log(response.data); // Log the data for debugging
-                setVillages(response.data.villages); // Set the villages array
-            } catch (error) {
-                console.error('Error fetching village data:', error);
+                console.error('Error fetching data:', error);
+                setError('Failed to fetch data');
+            } finally {
+                setLoading(false);
             }
         };
 
-        fetchVillages();
+        fetchData();
     }, []);
 
+    // Handle loading and error states
+    if (loading) {
+        return (
+            <Container maxWidth="lg" sx={{ mt: 5, textAlign: 'center' }}>
+                <CircularProgress />
+            </Container>
+        );
+    }
 
+    if (error) {
+        return (
+            <Container maxWidth="lg" sx={{ mt: 5, textAlign: 'center' }}>
+                <Typography variant="h6" color="error">
+                    {error}
+                </Typography>
+            </Container>
+        );
+    }
 
-
+    // Handle adding leader
     const handleAddLeader = async () => {
         const newJDP = {
             name: `${localTabName}`,
@@ -79,32 +88,29 @@ const BoothLeaderForm = () => {
                     MobNo,
                     Comments,
                 })),
-                questions: [
-                    { question: 'No of difference parties available in village', answer: answers[0] || '' },
-                    { question: 'How can we improve local services?', answer: answers[1] || '' },
-                    { question: 'What events do you wish to see organized?', answer: answers[2] || '' },
-                    { question: 'Any additional comments?', answer: answers[3] || '' },
-                    { question: 'What other suggestions do you have for improvement?', answer: answers[4] || '' },
-                ],
+                questions: answers.map((answer, index) => ({
+                    question: [
+                        'No of difference parties available in village',
+                        'How can we improve local services?',
+                        'What events do you wish to see organized?',
+                        'Any additional comments?',
+                        'What other suggestions do you have for improvement?'
+                    ][index],
+                    answer: answer || ''
+                })),
             }],
             leaders: [{ name: localLeaderName }],
         };
 
         try {
             await axios.post('http://localhost:5000/villages', newJDP);
-            // Reset form data
             resetForm();
             setLocalVillageName('');
             setLocalLeaderName('');
             setLocalTabName('');
-
-
-            // Redirect to the same page
-            navigate(location.pathname, { replace: true }); // Use location.pathname to stay on the same page
+            navigate(location.pathname, { replace: true });
             setSnackbarMessage('Village added successfully!');
             setSnackbarSeverity('success');
-
-
         } catch (error) {
             console.error('Error adding village:', error);
             const errorMessage = error.response?.data?.message || 'Failed to add village. Please try again.';
@@ -122,7 +128,7 @@ const BoothLeaderForm = () => {
     };
 
     const updateBoothLeader = (index, field, value) => {
-        setBoothLeaders((prevLeaders) => {
+        setBoothLeaders(prevLeaders => {
             const newLeaders = [...prevLeaders];
             newLeaders[index][field] = value;
             return newLeaders;
@@ -138,10 +144,11 @@ const BoothLeaderForm = () => {
     const handleCloseSnackbar = () => {
         setSnackbarOpen(false);
     };
+
     return (
         <Container maxWidth="lg" sx={{ mt: 5 }}>
             <Typography variant="h4" gutterBottom align="center">
-                Booth Leader Form
+                Village Data Table
             </Typography>
             <Box sx={{ mb: 3, display: 'flex', justifyContent: 'flex-end' }}>
                 <Button variant="outlined" component={Link} to="/villages" sx={{ mb: 2 }}>
@@ -208,7 +215,7 @@ const BoothLeaderForm = () => {
                     'No of Tarun mandal list, number?',
                     'No of society?',
                     'No Of dairys?',
-                    'Any community or leader. Example: patil, shimpi, parit, Desai, etc. they have some big community or group etc',
+                    'Any community or leader. Example: patil, shimpi, parit, Desai, etc. they have some big community or group etc'
                 ].map((question, index) => (
                     <Grid item xs={12} sm={6} md={4} key={index}>
                         <TextField
@@ -233,21 +240,20 @@ const BoothLeaderForm = () => {
                 </Button>
             </Box>
 
-            {/* Table Container */}
-            <Box sx={{ mt: 5 }}>
-                <TableContainer component={Paper}>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell><strong>JDP Name</strong></TableCell>
-                                <TableCell><strong>Village Name</strong></TableCell>
-                                <TableCell><strong>Total Votes</strong></TableCell>
-                                <TableCell><strong>Booth Leaders</strong></TableCell>
-                                <TableCell><strong>Questions</strong></TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {submittedData.map((jdp) => (
+            <TableContainer component={Paper}>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell><strong>JDP Name</strong></TableCell>
+                            <TableCell><strong>Village Name</strong></TableCell>
+                            <TableCell><strong>Total Votes</strong></TableCell>
+                            <TableCell><strong>Booth Leader</strong></TableCell>
+                            <TableCell><strong>Questions</strong></TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {data.length > 0 ? (
+                            data.map((jdp) =>
                                 jdp.villages.map((village) => (
                                     <TableRow key={village._id}>
                                         <TableCell>{jdp.name}</TableCell>
@@ -266,16 +272,18 @@ const BoothLeaderForm = () => {
                                                     {q.question}: {q.answer}
                                                 </div>
                                             ))}
-                                        </TableCell>
+                                        </TableCell>    
                                     </TableRow>
                                 ))
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </Box>
-
-            {/* Snackbar for messages */}
+                            )
+                        ) : (
+                            <TableRow>
+                                <TableCell colSpan={4} align="center">No data available</TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </TableContainer>
             <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
                 <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
                     {snackbarMessage}
@@ -284,28 +292,5 @@ const BoothLeaderForm = () => {
         </Container>
     );
 };
-    
-    
 
 export default BoothLeaderForm;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
