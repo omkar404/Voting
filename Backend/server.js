@@ -59,8 +59,4 @@ const startServer = async () => {
     });
 };
 
-app.use('/', (req, res) => {
-    res.json({ message: 'Hello, World!' });
-});
-
 startServer();
